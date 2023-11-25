@@ -6,16 +6,8 @@ import userValidationSchema from "./validation.joi";
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user } = req.body;
-    const { error, value } = userValidationSchema.validate(user);
+    const { value } = userValidationSchema.validate(user);
     const result = await UserService.createUserIntoDB(value);
-
-    if (error) {
-      res.status(500).json({
-        success: false,
-        message: "Someting went wrong",
-        error: error.details,
-      });
-    }
 
     res.status(200).json({
       success: true,
@@ -25,7 +17,7 @@ const createUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "Someting went wrong",
+      message: "Someting goes wrong",
       error: error.details,
     });
   }
@@ -61,8 +53,33 @@ const getSingleUser = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "Someting went wrong",
-      error: error.details,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
+    });
+  }
+};
+
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const result = await UserService.deleteUserFromDB(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Users deleted successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "User not found",
+      error: {
+        code: 404,
+        description: "User not found!",
+      },
     });
   }
 };
@@ -71,4 +88,5 @@ export const UserController = {
   createUser,
   getUser,
   getSingleUser,
+  deleteUser,
 };

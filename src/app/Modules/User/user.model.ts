@@ -46,6 +46,10 @@ const userSchema = new Schema<TUser, UserModel>({
       quantity: { type: Number, required: true },
     },
   ],
+  isdeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.pre("save", async function (next) {
@@ -60,6 +64,18 @@ userSchema.pre("save", async function (next) {
 
 userSchema.post("save", function (doc, next) {
   delete (doc as any)._doc.password;
+  next();
+});
+
+///delete midlwire
+
+userSchema.pre("find", function (next) {
+  this.find({ isdeleted: { $ne: true } });
+  next();
+});
+
+userSchema.pre("findOne", function (next) {
+  this.find({ isdeleted: { $ne: true } });
   next();
 });
 
