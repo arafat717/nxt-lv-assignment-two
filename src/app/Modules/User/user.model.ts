@@ -1,10 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Schema, model } from "mongoose";
-import { User } from "./user.interface";
+import { TUser, UserModel } from "./user.interface";
+import bcrypt from "bcrypt";
+import config from "../../config";
 
-const userSchema = new Schema<User>({
-  userId: { type: Number, required: true },
-  username: { type: String, required: true },
+const userSchema = new Schema<TUser, UserModel>({
+  userId: {
+    type: Number,
+    required: [true, "userId is required"],
+    unique: true,
+  },
+  username: {
+    type: String,
+    required: [true, "username is required"],
+    unique: true,
+  },
   password: { type: String, required: true },
   fullName: {
     firstName: { type: String, required: true },
@@ -38,4 +48,24 @@ const userSchema = new Schema<User>({
   ],
 });
 
-export const UserModel = model<User>("User", userSchema);
+userSchema.pre("save", async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round)
+  );
+  next();
+});
+
+userSchema.post("save", function (doc, next) {
+  delete (doc as any)._doc.password;
+  next();
+});
+
+userSchema.statics.isUserExists = async function (userId: number) {
+  const existstUser = await User.findOne({ userId });
+  return existstUser;
+};
+
+export const User = model<TUser, UserModel>("User", userSchema);
