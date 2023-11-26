@@ -23,18 +23,32 @@ const getsingleUserFromDB = async (userId: number) => {
   }
 };
 
-const deleteUserFromDB = async (userId: number) => {
-  if (await User.isUserExists(userId)) {
-    const result = await User.updateOne({ userId }, { isdeleted: true });
-    return result;
-  } else {
-    throw new Error("user is not found");
-  }
+// const deleteUserFromDB = async (userId: number) => {
+//   if (await User.isUserExists(userId)) {
+//     const result = await User.updateOne({ userId }, { isdeleted: true });
+//     return result;
+//   } else {
+//     throw new Error("user is not found");
+//   }
+// };
+
+const updateUserFromDB = async (id: string, userData: TUser) => {
+  const result = await User.findByIdAndUpdate(id, userData, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
+const deleteUserFromDB = async (id: string) => {
+  const result = await User.findByIdAndDelete(id);
+  return result;
 };
 
 export const UserService = {
   createUserIntoDB,
   getallUserFromDB,
   getsingleUserFromDB,
+  updateUserFromDB,
   deleteUserFromDB,
 };

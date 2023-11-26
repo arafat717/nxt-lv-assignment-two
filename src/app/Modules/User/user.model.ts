@@ -46,10 +46,6 @@ const userSchema = new Schema<TUser, UserModel>({
       quantity: { type: Number, required: true },
     },
   ],
-  isdeleted: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 userSchema.pre("save", async function (next) {

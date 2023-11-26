@@ -24,7 +24,6 @@ const userValidationSchema = Joi.object({
       quantity: Joi.number(),
     })
   ),
-  isdeleted: Joi.boolean(),
 });
 
 export default userValidationSchema;
