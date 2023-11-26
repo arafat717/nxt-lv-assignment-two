@@ -63,17 +63,25 @@ userSchema.post("save", function (doc, next) {
   next();
 });
 
-///delete midlwire
+userSchema.pre("findOne", function (next) {
+  this.select(
+    "username email address fullName age orders userId isActive hobbies"
+  );
+  this.find({ isdeleted: { $ne: true } });
+  next();
+});
 
 userSchema.pre("find", function (next) {
+  this.select("username email address fullName age orders");
   this.find({ isdeleted: { $ne: true } });
   next();
 });
 
-userSchema.pre("findOne", function (next) {
-  this.find({ isdeleted: { $ne: true } });
-  next();
-});
+// userSchema.pre("put", function (next) {
+//   this.select("username email address fullName age orders");
+//   this.find({ isdeleted: { $ne: true } });
+//   next();
+// });
 
 userSchema.statics.isUserExists = async function (userId: number) {
   const existstUser = await User.findOne({ userId });
