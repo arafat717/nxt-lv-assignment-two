@@ -4,6 +4,12 @@ import { TUser, UserModel } from "./user.interface";
 import bcrypt from "bcrypt";
 import config from "../../config";
 
+const productSchema = new Schema({
+  productName: { type: String, required: true },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
+});
+
 const userSchema = new Schema<TUser, UserModel>({
   userId: {
     type: Number,
@@ -39,22 +45,19 @@ const userSchema = new Schema<TUser, UserModel>({
     city: { type: String, required: true },
     country: { type: String, required: true },
   },
-  orders: [
-    {
-      productName: { type: String, required: true },
-      price: { type: Number, required: true },
-      quantity: { type: Number, required: true },
-    },
-  ],
+  orders: [productSchema],
 });
 
 userSchema.pre("save", async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_round)
-  );
+  if (user.password) {
+    user.password = await bcrypt.hash(
+      user.password,
+      Number(config.bcrypt_salt_round)
+    );
+  }
+
   next();
 });
 
@@ -77,15 +80,19 @@ userSchema.pre("find", function (next) {
   next();
 });
 
-// userSchema.pre("put", function (next) {
-//   this.select("username email address fullName age orders");
-//   this.find({ isdeleted: { $ne: true } });
-//   next();
-// });
-
 userSchema.statics.isUserExists = async function (userId: number) {
-  const existstUser = await User.findOne({ userId });
-  return existstUser;
+  const existingUser = await User.findOne({ userId: userId });
+  return existingUser;
+};
+
+// Add a function to retrieve all orders for a user
+userSchema.statics.getAllOrdersForUser = async function (userId: number) {
+  const user = await this.findOne({ userId });
+  if (user) {
+    return user.orders || [];
+  } else {
+    throw new Error("User not found");
+  }
 };
 
 export const User = model<TUser, UserModel>("User", userSchema);
