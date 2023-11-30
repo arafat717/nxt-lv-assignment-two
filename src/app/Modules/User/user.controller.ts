@@ -6,7 +6,7 @@ import userValidationSchema from "./validation.joi";
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user } = req.body;
+    const user = req.body;
     const { value } = userValidationSchema.validate(user);
     const result = await UserService.createUserIntoDB(value);
 
@@ -132,8 +132,11 @@ const addedproduct = async (req: Request, res: Response) => {
     } else {
       res.status(500).json({
         success: false,
-        message: "Something went wrong",
-        error: error.message,
+        message: "User not found",
+        error: {
+          code: 404,
+          description: "User not found!",
+        },
       });
     }
   }
