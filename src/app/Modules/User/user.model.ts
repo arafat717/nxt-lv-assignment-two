@@ -85,14 +85,4 @@ userSchema.statics.isUserExists = async function (userId: number) {
   return existingUser;
 };
 
-// Add a function to retrieve all orders for a user
-userSchema.statics.getAllOrdersForUser = async function (userId: number) {
-  const user = await this.findOne({ userId });
-  if (user) {
-    return user.orders || [];
-  } else {
-    throw new Error("User not found");
-  }
-};
-
 export const User = model<TUser, UserModel>("User", userSchema);

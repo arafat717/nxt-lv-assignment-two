@@ -38,17 +38,6 @@ const deleteUserFromDB = async (userId: number) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// const addProductToOrder = async (userId: number, product: any) => {
-//   const user = await User.findOne({ userId });
-//   if (!user) {
-//     throw new Error("User not found");
-//   }
-//   user.orders?.push(product);
-//   await user.save();
-//   return user;
-// };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const addProductToOrder = async (userId: number, product: any) => {
   const user = await User.findOne({ userId });
   if (!user) {
