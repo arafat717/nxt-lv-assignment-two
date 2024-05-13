@@ -82,3 +82,31 @@ Endpoint: `POST /api/users`
         "country": "string"
     }
 }
+
+### Response
+
+```json
+{
+    "success": true,
+    "message": "User created successfully!",
+    "data": {
+        "userId": "number",
+        "username": "string",
+        "fullName": {
+            "firstName": "string",
+            "lastName": "string"
+        },
+        "age": "number",
+        "email": "string",
+        "isActive": "boolean",
+        "hobbies": [
+            "string",
+            "string"
+        ],
+        "address": {
+            "street": "string",
+            "city": "string",
+            "country": "string"
+        }
+    }
+}
