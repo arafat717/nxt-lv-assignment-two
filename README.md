@@ -1,6 +1,12 @@
 # Mongoose Express CRUD Mastery
 A Node.js Express application with TypeScript as the programming language, integrating MongoDB with Mongoose for user data and order management. Ensure data integrity through validation using Joi/Zod.
 
+
+## Live URL
+
+<https://leveltwo.vercel.app/>
+
+
 ### Define Data Models
 
 - Mongoose models for User data based on the provided data structure.
