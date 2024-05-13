@@ -48,30 +48,7 @@ The project structure is organized as follows:
   - `index.ts`: Entry point of the application.
   - `server.ts`: Configures Express server.
 
-## Data Models
 
-### User Model
-
-```typescript
-interface User {
-    userId: number;
-    username: string;
-    password: string; // Hashed password
-    fullName: {
-        firstName: string;
-        lastName: string;
-    };
-    age: number;
-    email: string;
-    isActive: boolean;
-    hobbies: string[];
-    address: {
-        street: string;
-        city: string;
-        country: string;
-    };
-    orders: Order[];
-}
 
 
 
