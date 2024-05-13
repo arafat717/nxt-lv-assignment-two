@@ -82,7 +82,3 @@ Endpoint: `POST /api/users`
         "country": "string"
     }
 }
-
-
-
-
